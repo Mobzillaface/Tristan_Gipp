@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ネオン東京 - Tristan Gipp</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Orbitron', monospace;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #00aeff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        /* Matrix rain effect */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.3;
+        }
+        
+        .matrix-column {
+            position: absolute;
+            top: -100%;
+            font-size: 14px;
+            color: #00aeff;
+            animation: matrix-fall linear infinite;
+            white-space: nowrap;
+        }
+        
+        @keyframes matrix-fall {
+            from {
+                transform: translateY(-100vh);
+            }
+            to {
+                transform: translateY(500vh);
+            }
+        }
+        
+        /* Neon glow effects */
+        .neon-text {
+            text-shadow: 
+                0 0 5px currentColor,
+                0 0 10px currentColor,
+                0 0 20px currentColor,
+                0 0 40px currentColor;
+        }
+        
+        .neon-border {
+            border: 2px solid;
+            box-shadow: 
+                0 0 10px currentColor,
+                inset 0 0 10px currentColor;
+        }
+        
+        /* Japanese text with translation effect */
+        .japanese-text {
+            font-size: 1.1rem;
+            color: #b8001f;
+            margin-top: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            position: relative;
+            text-shadow: 
+                0 0 5px #7a0015,
+                0 0 10px #7a0015,
+                0 0 20px #7a0015;
+        }
+        
+        .japanese-hover {
+            color: #d44dc9;
+            text-shadow: 
+                0 0 5px #6b2c91,
+                0 0 10px #6b2c91,
+                0 0 20px #6b2c91;
+        }
+        
+        .translated {
+            color: #00aeff;
+            text-shadow: 
+                0 0 5px #0066cc,
+                0 0 10px #0066cc,
+                0 0 20px #0066cc;
+        }
+        
+        /* Header */
+        header {
+            position: relative;
+            z-index: 100;
+            padding: 2rem;
+            text-align: center;
+            background: linear-gradient(90deg, rgba(26, 26, 46, 0.9), rgba(139, 69, 19, 0.1));
+            backdrop-filter: blur(10px);
+        }
+        
+        .logo {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #d44dc9;
+            margin-bottom: 0.5rem;
+            animation: pulse-neon 2s ease-in-out infinite alternate;
+            cursor: pointer;
+        }
+        
+        @keyframes pulse-neon {
+            from {
+                text-shadow: 
+                    0 0 10px #6b2c91,
+                    0 0 20px #6b2c91,
+                    0 0 30px #6b2c91,
+                    0 0 40px #6b2c91;
+            }
+            to {
+                text-shadow: 
+                    0 0 5px #6b2c91,
+                    0 0 10px #6b2c91,
+                    0 0 15px #6b2c91,
+                    0 0 20px #6b2c91;
+            }
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            color: #6b2c91;
+            margin-bottom: 1rem;
+            text-shadow: 
+                0 0 5px #4a1f5e,
+                0 0 10px #4a1f5e,
+                0 0 20px #4a1f5e;
+        }
+        
+        /* Navigation */
+        nav {
+            position: relative;
+            z-index: 100;
+            padding: 1rem 2rem;
+            background: rgba(22, 33, 62, 0.8);
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+        
+        .nav-item {
+            color: #00aeff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid #00aeff;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .nav-item:hover {
+            background: rgba(212, 77, 201, 0.1);
+            box-shadow: 0 0 20px #00aeff;
+            transform: scale(1.05);
+        }
+        
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 77, 201, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .nav-item:hover::before {
+            left: 100%;
+        }
+        
+        /* Contact modal */
+        .contact-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9));
+            border: 2px solid #6b2c91;
+            padding: 2rem;
+            border-radius: 10px;
+            z-index: 1000;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 0 20px #6b2c91;
+        }
+        
+        .contact-modal.show {
+            display: block;
+        }
+        
+        .contact-modal h2 {
+            color: #00aeff;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .contact-modal p {
+            color: #b8b8b8;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .contact-modal .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #d44dc9;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        
+        /* Main content */
+        main {
+            position: relative;
+            z-index: 10;
+            padding: 3rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .hero-section {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .hero-title {
+            font-size: 2.5rem;
+            color: #b8001f;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            text-shadow: 
+                0 0 5px #7a0015,
+                0 0 10px #7a0015,
+                0 0 20px #7a0015;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: #6b2c91;
+            margin-bottom: 2rem;
+            text-shadow: 
+                0 0 5px #4a1f5e,
+                0 0 10px #4a1f5e,
+                0 0 20px #4a1f5e;
+        }
+        
+        /* Cards */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .card {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9));
+            border: 1px solid #6b2c91;
+            padding: 2rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(107, 44, 145, 0.1), transparent);
+            transition: left 0.8s ease;
+        }
+        
+        .card:hover::before {
+            left: 100%;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(107, 44, 145, 0.3);
+            border-color: #b8001f;
+        }
+        
+        .card h3 {
+            color: #00aeff;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            cursor: pointer;
+        }
+        
+        .card p {
+            color: #b8b8b8;
+            line-height: 1.6;
+        }
+        
+        .card a {
+            color: #00aeff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .card a:hover {
+            color: #d44dc9;
+            text-shadow: 
+                0 0 5px #6b2c91,
+                0 0 10px #6b2c91,
+                0 0 20px #6b2c91;
+        }
+        
+        /* Floating elements */
+        .floating-element {
+            position: fixed;
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0.6;
+        }
+        
+        .floating-1 {
+            top: 20%;
+            right: 10%;
+            color: #d146bf;
+            font-size: 2rem;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .floating-2 {
+            bottom: 30%;
+            left: 3%;
+            color: #6b2c91;
+            font-size: 1.5rem;
+            animation: float 4s ease-in-out infinite reverse;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Scanline effect */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(212, 77, 201, 0.03) 2px,
+                rgba(212, 77, 201, 0.03) 4px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Matrix background -->
+    <div class="matrix-bg" id="matrixBg"></div>
+    
+    <!-- Scanlines -->
+    <div class="scanlines"></div>
+    
+    <!-- Floating elements -->
+    <div class="floating-element floating-1 neon-text">龍</div>
+    <div class="floating-element floating-2 neon-text">夢</div>
+    
+    <header>
+        <h1 class="logo neon-text" data-japanese="トリスタンギプ" data-english="Tristan Gipp">トリスタンギプ</h1>
+        <p class="tagline neon-text" data-japanese="サイバーセキュリティ" data-english="Cybersecurity">Tristan Gipp - トリスタンギプ</p>
+    </header>
+    
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="nav-item" data-japanese="ホーム" data-english="Home" onclick="window.location.reload()">ホーム</a>
+            <a href="https://docs.google.com/document/d/e/2PACX-1vSZh0V1HGaWPhlx13AHG8jBq4I3PWDzqtxZD8Bwr_--ZUQ7WadhJ7ipg0nRH-3dTWatECo8ShzhhlyY/pub" class="nav-item" data-japanese="サービス" data-english="Services" target="_blank">サービス</a>
+            <a href="https://github.com/Mobzillaface?tab=repositories" class="nav-item" data-japanese="リポジトリ" data-english="Repositories" target="_blank">リポジトリ</a>
+            <a href="#" class="nav-item contact-button" data-japanese="お問い合わせ" data-english="Contact">お問い合わせ</a>
+        </div>
+    </nav>
+    
+    <main>
+        <section class="hero-section">
+            <h2 class="hero-title neon-text" data-japanese="未来への扉" data-english="Gateway to the Future">未来への扉</h2>
+            <p class="hero-subtitle neon-text">Projects</p>
+        </section>
+        
+        <div class="cards-container">
+            <div class="card neon-border">
+                <h3 class="neon-text" data-japanese="ケビンギャラリー" data-english="Kevin Gallery">ケビンギャラリー</h3>
+                <p><a href="https://kevinblunder.com" target="_blank">kevinblunder.com</a></p>
+                <p class="japanese-text" data-japanese="私の電話にあったケビンの写真を見てください" data-english="Browse all the photos of Kevin Roleke that I have in my phone">私の電話にあったケビンの写真を見てください</p>
+            </div>
+            
+            <div class="card neon-border">
+                <h3 class="neon-text" data-japanese="おじいちゃんギャラリー" data-english="Grandpa Gallery">おじいちゃんギャラリー</h3>
+                <p><a href="https://darryl-long.com" target="_blank">darryl-long.com</a></p>
+                <p class="japanese-text" data-japanese="写真を見るおじいちゃんギャラリー" data-english="Look at photos of my Grandpa">写真を見るおじいちゃんギャラリー</p>
+            </div>
+            
+            <div class="card neon-border">
+                <h3 class="neon-text" data-japanese="写真のアップロード" data-english="Photo Uploader">写真のアップロード</h3>
+                <p><a href="https://test.kevinblunder.com" target="_blank">test.kevinblunder.com</a></p>
+                <p class="japanese-text" data-japanese="私のウェブサイトに写真をアップロードする" data-english="Upload photos to my site, password is meandsometea">私のウェブサイトに写真をアップロードする</p>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Contact Modal -->
+    <div class="contact-modal" id="contactModal">
+        <button class="close-button neon-text">×</button>
+        <h2 class="neon-text">Contact Information</h2>
+        <p>Email: gipptristan@gmail.com</p>
+        <p>Social: tristangipp_ on Instagram</p>
+    </div>
+    
+    <script>
+        // Matrix rain effect
+        function createMatrixRain() {
+            const matrixBg = document.getElementById('matrixBg');
+            const characters = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン愛美心夢光闇龍神風雷火水土空時間世界未来過去現在道真理力生死命運星月太陽雲雨雪海森林都市街道橋門窓家人間男女子供老人友達家族恋人敵味方戦争平和希望絶望喜怒哀楽0123456789';
+            
+            for (let i = 0; i < 25; i++) {
+                const column = document.createElement('div');
+                column.className = 'matrix-column';
+                column.style.left = Math.random() * 100 + '%';
+                column.style.animationDuration = (Math.random() * 10 + 8) + 's';
+                column.style.animationDelay = Math.random() * 5 + 's';
+                
+                let text = '';
+                for (let j = 0; j < 30; j++) {
+                    text += characters.charAt(Math.floor(Math.random() * characters.length)) + '<br>';
+                }
+                column.innerHTML = text;
+                
+                matrixBg.appendChild(column);
+            }
+        }
+        
+        // Translation effect with faster flicker
+        let translatedElements = new Set();
+        
+        function createTranslationEffect(element) {
+            if (translatedElements.has(element)) return;
+            
+            const originalText = element.dataset.japanese;
+            const targetText = element.dataset.english;
+            const characters = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン愛美心夢光闇龍神風雷火水土空時間世界未来過去現在道真理力生死命運星月太陽雲雨雪海森林都市街道橋門窓家人間男女子供老人友達家族恋人敵味方戦争平和希望絶望喜怒哀楽abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            
+            const maxLength = Math.max(originalText.length, targetText.length);
+            let currentIndex = 0;
+            let flickerCount = 0;
+            const maxFlickersPerChar = 2;
+            const totalFlickers = maxLength * maxFlickersPerChar;
+            
+            function flicker() {
+                if (flickerCount >= totalFlickers) {
+                    element.textContent = targetText;
+                    element.classList.add('translated');
+                    element.classList.remove('japanese-hover');
+                    translatedElements.add(element);
+                    return;
+                }
+                
+                let displayText = '';
+                for (let i = 0; i < maxLength; i++) {
+                    if (i < currentIndex) {
+                        displayText += targetText[i] || '';
+                    } else {
+                        displayText += characters[Math.floor(Math.random() * characters.length)];
+                    }
+                }
+                
+                element.textContent = displayText;
+                flickerCount++;
+                
+                if (flickerCount % maxFlickersPerChar === 0) {
+                    currentIndex++;
+                }
+                
+                setTimeout(flicker, 25);
+            }
+            
+            flicker();
+        }
+        
+        // Translation hover events
+        document.addEventListener('mouseenter', function(e) {
+            if (e.target.dataset.japanese && e.target.dataset.english && !translatedElements.has(e.target)) {
+                e.target.classList.add('japanese-hover');
+                createTranslationEffect(e.target);
+            }
+        }, true);
+        
+        document.addEventListener('mouseleave', function(e) {
+            if (e.target.dataset.japanese && e.target.dataset.english && !translatedElements.has(e.target)) {
+                e.target.classList.remove('japanese-hover');
+                if (!translatedElements.has(e.target)) {
+                    e.target.textContent = e.target.dataset.japanese;
+                }
+            }
+        }, true);
+        
+        // Glitch effect on click
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('nav-item')) {
+                e.target.style.animation = 'glitch 0.3s ease';
+                setTimeout(() => {
+                    e.target.style.animation = '';
+                }, 300);
+            }
+        });
+        
+        // Contact modal functionality
+        const contactButton = document.querySelector('.contact-button');
+        const contactModal = document.getElementById('contactModal');
+        const closeButton = document.querySelector('.close-button');
+        
+        contactButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            contactModal.classList.add('show');
+        });
+        
+        closeButton.addEventListener('click', () => {
+            contactModal.classList.remove('show');
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === contactModal) {
+                contactModal.classList.remove('show');
+            }
+        });
+        
+        // Initialize matrix rain once
+        createMatrixRain();
+        
+        // Random color shifts for neon elements
+        function randomColorShift() {
+            const neonElements = document.querySelectorAll('.neon-text');
+            const colors = ['#d44dc9', '#b8001f', '#6b2c91'];
+            
+            neonElements.forEach(element => {
+                if (Math.random() < 0.1 && !translatedElements.has(element)) {
+                    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                    element.style.color = randomColor;
+                    setTimeout(() => {
+                        element.style.color = '';
+                    }, 200);
+                }
+            });
+        }
+        
+        setInterval(randomColorShift, 2000);
+    </script>
+</body>
+</html>
