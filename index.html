@@ -538,22 +538,21 @@
             flicker();
         }
         
-        // Translation hover events
-        document.addEventListener('mouseenter', function(e) {
-            if (e.target.dataset.japanese && e.target.dataset.english && !translatedElements.has(e.target)) {
-                e.target.classList.add('japanese-hover');
-                createTranslationEffect(e.target);
-            }
-        }, true);
+        // Auto-translate all elements after 2 seconds
+        function autoTranslateAll() {
+            const elementsToTranslate = document.querySelectorAll('[data-japanese][data-english]');
+            elementsToTranslate.forEach((element, index) => {
+                setTimeout(() => {
+                    if (!translatedElements.has(element)) {
+                        element.classList.add('japanese-hover');
+                        createTranslationEffect(element);
+                    }
+                }, index * 100); // Stagger the animations slightly
+            });
+        }
         
-        document.addEventListener('mouseleave', function(e) {
-            if (e.target.dataset.japanese && e.target.dataset.english && !translatedElements.has(e.target)) {
-                e.target.classList.remove('japanese-hover');
-                if (!translatedElements.has(e.target)) {
-                    e.target.textContent = e.target.dataset.japanese;
-                }
-            }
-        }, true);
+        // Start auto-translation after 2 seconds
+        setTimeout(autoTranslateAll, 2000);
         
         // Glitch effect on click
         document.addEventListener('click', function(e) {
