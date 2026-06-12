@@ -3,605 +3,538 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tristan Gipp</title>
+    <title>Tristan Gipp — Cybersecurity</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg-deep:    #0a0a14;
+            --bg-mid:     #11112a;
+            --bg-card:    rgba(255,255,255,0.04);
+            --accent-mag: #c94fc7;
+            --accent-blue:#00b4ff;
+            --accent-pur: #7a3fa0;
+            --text-pri:   #e8e8f0;
+            --text-sec:   #8888aa;
+            --text-dim:   #44445a;
+            --border:     rgba(122, 63, 160, 0.35);
+            --border-hov: rgba(201, 79, 199, 0.6);
+            --glow-mag:   rgba(201, 79, 199, 0.25);
+            --glow-blue:  rgba(0, 180, 255, 0.25);
         }
-        
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
         body {
-            font-family: 'Orbitron', monospace;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            color: #00aeff;
-            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-pri);
             min-height: 100vh;
+            overflow-x: hidden;
         }
-        
-        /* Matrix rain effect */
-        .matrix-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            opacity: 0.3;
-        }
-        
-        /* Canvas for matrix effect */
+
         #matrixCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            opacity: 0.3;
+            position: fixed; inset: 0;
+            pointer-events: none; z-index: 0; opacity: 0.12;
         }
-        
-        /* Neon glow effects */
-        .neon-text {
-            text-shadow: 
-                0 0 5px currentColor,
-                0 0 10px currentColor,
-                0 0 20px currentColor,
-                0 0 40px currentColor;
-        }
-        
-        .neon-border {
-            border: 2px solid;
-            box-shadow: 
-                0 0 10px currentColor,
-                inset 0 0 10px currentColor;
-        }
-        
-        /* Japanese text with translation effect */
-        .japanese-text {
-            font-size: 1.1rem;
-            color: #d44dc9;
-            margin-top: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.3s ease;
-            position: relative;
-            text-shadow: 
-                0 0 5px #6b2c91,
-                0 0 10px #6b2c91,
-                0 0 20px #6b2c91;
-        }
-        
-        .japanese-hover {
-            color: #d44dc9;
-            text-shadow: 
-                0 0 5px #6b2c91,
-                0 0 10px #6b2c91,
-                0 0 20px #6b2c91;
-        }
-        
-        .translated {
-            color: #d44dc9;
-            text-shadow: 
-                0 0 5px #6b2c91,
-                0 0 10px #6b2c91,
-                0 0 20px #6b2c91;
-        }
-        
-        /* Header */
-        header {
-            position: relative;
-            z-index: 100;
-            padding: 2rem;
-            text-align: center;
-            background: linear-gradient(90deg, rgba(26, 26, 46, 0.9), rgba(139, 69, 19, 0.1));
-            backdrop-filter: blur(10px);
-        }
-        
-        .logo {
-            font-size: 3rem;
-            font-weight: 900;
-            color: #d44dc9;
-            margin-bottom: 0.5rem;
-            animation: pulse-neon 2s ease-in-out infinite alternate;
-            cursor: pointer;
-        }
-        
-        @keyframes pulse-neon {
-            from {
-                text-shadow: 
-                    0 0 10px #6b2c91,
-                    0 0 20px #6b2c91,
-                    0 0 30px #6b2c91,
-                    0 0 40px #6b2c91;
-            }
-            to {
-                text-shadow: 
-                    0 0 5px #6b2c91,
-                    0 0 10px #6b2c91,
-                    0 0 15px #6b2c91,
-                    0 0 20px #6b2c91;
-            }
-        }
-        
-        .tagline {
-            font-size: 1.2rem;
-            color: #6b2c91;
-            margin-bottom: 1rem;
-            text-shadow: 
-                0 0 5px #4a1f5e,
-                0 0 10px #4a1f5e,
-                0 0 20px #4a1f5e;
-        }
-        
-        /* Navigation */
-        nav {
-            position: relative;
-            z-index: 100;
-            padding: 1rem 2rem;
-            background: rgba(22, 33, 62, 0.8);
-            backdrop-filter: blur(10px);
-        }
-        
-        .nav-container {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-        }
-        
-        .nav-item {
-            color: #00aeff;
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border: 1px solid #00aeff;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-        }
-        
-        .nav-item:hover {
-            background: rgba(212, 77, 201, 0.1);
-            box-shadow: 0 0 20px #00aeff;
-            transform: scale(1.05);
-        }
-        
-        .nav-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(212, 77, 201, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .nav-item:hover::before {
-            left: 100%;
-        }
-        
-        /* Contact modal */
-        .contact-modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9));
-            border: 2px solid #6b2c91;
-            padding: 2rem;
-            border-radius: 10px;
-            z-index: 1000;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 0 20px #6b2c91;
-        }
-        
-        .contact-modal.show {
-            display: block;
-        }
-        
-        .contact-modal h2 {
-            color: #00aeff;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-        
-        .contact-modal p {
-            color: #b8b8b8;
-            margin-bottom: 1rem;
-            line-height: 1.6;
-        }
-        
-        .contact-modal .close-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            color: #d44dc9;
-            font-size: 1.5rem;
-            cursor: pointer;
-            background: none;
-            border: none;
-        }
-        
-        /* Main content */
-        main {
-            position: relative;
-            z-index: 10;
-            padding: 3rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .hero-section {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-        
-        .hero-title {
-            font-size: 2.5rem;
-            color: #d44dc9;
-            margin-bottom: 1rem;
-            cursor: pointer;
-            text-shadow: 
-                0 0 5px #6b2c91,
-                0 0 10px #6b2c91,
-                0 0 20px #6b2c91;
-        }
-        
-        .hero-subtitle {
-            font-size: 1.5rem;
-            color: #6b2c91;
-            margin-bottom: 2rem;
-            text-shadow: 
-                0 0 5px #4a1f5e,
-                0 0 10px #4a1f5e,
-                0 0 20px #4a1f5e;
-        }
-        
-        /* Cards */
-        .cards-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-        
-        .card {
-            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9));
-            border: 1px solid #6b2c91;
-            padding: 2rem;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(107, 44, 145, 0.1), transparent);
-            transition: left 0.8s ease;
-        }
-        
-        .card:hover::before {
-            left: 100%;
-        }
-        
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(107, 44, 145, 0.3);
-            border-color: #b8001f;
-        }
-        
-        .card h3 {
-            color: #00aeff;
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-            cursor: pointer;
-        }
-        
-        .card p {
-            color: #b8b8b8;
-            line-height: 1.6;
-        }
-        
-        .card a {
-            color: #00aeff;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        
-        .card a:hover {
-            color: #d44dc9;
-            text-shadow: 
-                0 0 5px #6b2c91,
-                0 0 10px #6b2c91,
-                0 0 20px #6b2c91;
-        }
-        
-        /* Floating elements */
-        .floating-element {
-            position: fixed;
-            pointer-events: none;
-            z-index: 5;
-            opacity: 0.6;
-        }
-        
-        .floating-1 {
-            top: 20%;
-            right: 10%;
-            color: #d146bf;
-            font-size: 2rem;
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        .floating-2 {
-            bottom: 30%;
-            left: 3%;
-            color: #6b2c91;
-            font-size: 1.5rem;
-            animation: float 4s ease-in-out infinite reverse;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-        
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .logo {
-                font-size: 2rem;
-            }
-            
-            .nav-container {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .hero-title {
-                font-size: 2rem;
-            }
-            
-            .hero-subtitle {
-                font-size: 1.2rem;
-            }
-            
-            .cards-container {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        /* Scanline effect */
+
         .scanlines {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            position: fixed; inset: 0;
             background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 2px,
-                rgba(212, 77, 201, 0.03) 2px,
-                rgba(212, 77, 201, 0.03) 4px
+                0deg, transparent, transparent 3px,
+                rgba(201,79,199,0.015) 3px, rgba(201,79,199,0.015) 4px
             );
-            pointer-events: none;
-            z-index: 1000;
+            pointer-events: none; z-index: 9999;
+        }
+
+        .site-wrapper {
+            position: relative; z-index: 10;
+            max-width: 1100px; margin: 0 auto; padding: 0 2rem;
+        }
+
+        /* ── HEADER ── */
+        header {
+            position: relative; z-index: 100;
+            padding: 3.5rem 2rem 2.5rem;
+            max-width: 1100px; margin: 0 auto;
+            display: flex; flex-direction: column; align-items: flex-start;
+        }
+
+        .header-eyebrow {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.65rem; font-weight: 400;
+            letter-spacing: 0.3em; color: var(--accent-blue);
+            text-transform: uppercase; margin-bottom: 0.85rem; opacity: 0.8;
+        }
+
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.8rem; font-weight: 900;
+            color: var(--text-pri); letter-spacing: 0.02em;
+            line-height: 1; margin-bottom: 0.5rem;
+        }
+        .logo span {
+            color: var(--accent-mag);
+            text-shadow: 0 0 20px var(--glow-mag), 0 0 40px var(--glow-mag);
+        }
+
+        .tagline {
+            font-size: 0.9rem; font-weight: 300;
+            color: var(--text-sec); letter-spacing: 0.05em;
+        }
+
+        .header-jp {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.75rem; color: var(--accent-pur);
+            margin-top: 0.75rem; opacity: 0.7; letter-spacing: 0.15em;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: sticky; top: 0; z-index: 200;
+            background: rgba(10,10,20,0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-inner {
+            max-width: 1100px; margin: 0 auto;
+            padding: 0 2rem; display: flex; align-items: center;
+        }
+
+        .nav-item {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.65rem; font-weight: 600;
+            letter-spacing: 0.15em; text-transform: uppercase;
+            color: var(--text-sec); text-decoration: none;
+            padding: 1.1rem 1.4rem;
+            transition: color 0.2s;
+            cursor: pointer; position: relative;
+            background: none; border: none; white-space: nowrap;
+        }
+
+        .nav-item::after {
+            content: ''; position: absolute;
+            bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 0; height: 2px;
+            background: var(--accent-mag);
+            box-shadow: 0 0 8px var(--accent-mag);
+            transition: width 0.25s ease;
+        }
+        .nav-item:hover { color: var(--text-pri); }
+        .nav-item:hover::after { width: calc(100% - 2rem); }
+
+        /* ── HERO / INTRO ── */
+        .hero { padding: 4rem 0 3rem; }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem; align-items: center;
+        }
+
+        .hero-heading {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.75rem; font-weight: 900;
+            line-height: 1.25; margin-bottom: 1.25rem;
+            color: var(--text-pri);
+        }
+        .hero-heading em {
+            font-style: normal; color: var(--accent-mag);
+            text-shadow: 0 0 20px var(--glow-mag);
+        }
+
+        .hero-body {
+            font-size: 0.95rem; line-height: 1.8;
+            color: var(--text-sec); font-weight: 300;
+            margin-bottom: 1.25rem;
+        }
+
+        .cert-badge {
+            display: inline-flex; align-items: center; gap: 0.6rem;
+            border: 1px solid var(--border-hov);
+            border-radius: 4px; padding: 0.55rem 0.9rem;
+            background: rgba(201,79,199,0.07);
+            font-family: 'Orbitron', monospace;
+            font-size: 0.6rem; letter-spacing: 0.15em;
+            color: var(--accent-mag); text-transform: uppercase;
+        }
+        .cert-badge::before {
+            content: '✦';
+            color: var(--accent-blue);
+            font-size: 0.7rem;
+        }
+
+        /* HUD panel */
+        .hud-panel {
+            border: 1px solid var(--border); border-radius: 4px;
+            padding: 1.5rem; background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            position: relative; overflow: hidden;
+        }
+        .hud-panel::before {
+            content: ''; position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-mag), transparent);
+            animation: scan-line 3s ease-in-out infinite;
+        }
+        @keyframes scan-line {
+            0%   { opacity: 0; top: 0; }
+            20%  { opacity: 1; }
+            100% { opacity: 0; top: 100%; }
+        }
+        .hud-corner { position: absolute; width: 10px; height: 10px; border-color: var(--accent-mag); border-style: solid; opacity: 0.6; }
+        .hud-corner.tl { top: 0; left: 0;   border-width: 1px 0 0 1px; }
+        .hud-corner.tr { top: 0; right: 0;  border-width: 1px 1px 0 0; }
+        .hud-corner.bl { bottom: 0; left: 0;  border-width: 0 0 1px 1px; }
+        .hud-corner.br { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
+
+        .hud-stat { display: flex; flex-direction: column; margin-bottom: 1.25rem; }
+        .hud-stat:last-child { margin-bottom: 0; }
+        .hud-stat-label {
+            font-family: 'Orbitron', monospace; font-size: 0.55rem;
+            letter-spacing: 0.25em; color: var(--accent-blue);
+            text-transform: uppercase; margin-bottom: 0.3rem;
+        }
+        .hud-stat-value { font-size: 0.9rem; color: var(--text-pri); }
+        .hud-bar { height: 2px; background: var(--text-dim); margin-top: 0.5rem; border-radius: 1px; overflow: hidden; }
+        .hud-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-pur), var(--accent-mag));
+            box-shadow: 0 0 6px var(--accent-mag); border-radius: 1px;
+            animation: bar-grow 1.5s ease-out forwards;
+        }
+        @keyframes bar-grow { from { width: 0%; } }
+        .hud-divider { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
+
+        /* ── SECTION ── */
+        .section { padding: 2rem 0 4rem; }
+
+        .section-label {
+            font-family: 'Orbitron', monospace; font-size: 0.6rem;
+            letter-spacing: 0.3em; color: var(--text-dim);
+            text-transform: uppercase; margin-bottom: 2rem;
+            display: flex; align-items: center; gap: 1rem;
+        }
+        .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+        /* ── CARDS ── */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 6px; padding: 1.75rem;
+            backdrop-filter: blur(12px);
+            transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            position: relative; overflow: hidden;
+            text-decoration: none; display: block;
+        }
+        .card::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, var(--glow-mag) 0%, transparent 60%);
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .card:hover {
+            border-color: var(--border-hov);
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 20px var(--glow-mag);
+        }
+        .card:hover::after { opacity: 1; }
+
+        .card-title {
+            font-family: 'Orbitron', monospace; font-size: 0.8rem;
+            font-weight: 600; color: var(--accent-blue);
+            letter-spacing: 0.1em; margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+        .card-jp {
+            font-size: 0.7rem; color: var(--accent-pur);
+            opacity: 0.7; margin-bottom: 0.75rem; letter-spacing: 0.08em;
+        }
+        .card-desc {
+            font-size: 0.875rem; color: var(--text-sec);
+            line-height: 1.65; font-weight: 300;
+        }
+        .card-link {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            margin-top: 1.1rem; font-size: 0.75rem;
+            color: var(--accent-mag); text-decoration: none;
+            font-family: 'Orbitron', monospace; letter-spacing: 0.1em;
+            transition: color 0.2s, transform 0.2s;
+        }
+        .card-link:hover { color: var(--text-pri); }
+        .card:hover .card-link { transform: translateX(4px); }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
+            z-index: 1000; align-items: center; justify-content: center;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal {
+            background: var(--bg-mid); border: 1px solid var(--border-hov);
+            border-radius: 8px; padding: 2.5rem; max-width: 380px;
+            width: 90%; box-shadow: 0 0 40px var(--glow-mag); position: relative;
+        }
+        .modal h2 {
+            font-family: 'Orbitron', monospace; font-size: 0.9rem;
+            letter-spacing: 0.2em; color: var(--accent-blue);
+            text-transform: uppercase; margin-bottom: 1.5rem;
+        }
+        .modal-line { display: flex; flex-direction: column; gap: 0.2rem; margin-bottom: 1.1rem; }
+        .modal-line-label {
+            font-family: 'Orbitron', monospace; font-size: 0.55rem;
+            letter-spacing: 0.25em; color: var(--text-dim); text-transform: uppercase;
+        }
+        .modal-line-value { font-size: 0.9rem; color: var(--text-pri); }
+        .modal-close {
+            position: absolute; top: 1rem; right: 1rem;
+            background: none; border: none; color: var(--text-sec);
+            font-size: 1.3rem; cursor: pointer; line-height: 1; transition: color 0.2s;
+        }
+        .modal-close:hover { color: var(--accent-mag); }
+
+        /* ── FLOATING JP ── */
+        .floating-jp {
+            position: fixed; pointer-events: none;
+            font-family: serif; z-index: 5; opacity: 0.06;
+            font-size: 8rem; font-weight: 900;
+            color: var(--accent-mag); user-select: none;
+        }
+        .float-1 { top: 15%; right: 1%; animation: float 8s ease-in-out infinite; }
+        .float-2 { bottom: 20%; left: 1%; animation: float 6s ease-in-out infinite reverse; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50%       { transform: translateY(-18px); }
+        }
+
+        /* ── FOOTER ── */
+        footer { border-top: 1px solid var(--border); padding: 2rem; text-align: center; }
+        footer p {
+            font-size: 0.75rem; color: var(--text-dim);
+            font-family: 'Orbitron', monospace; letter-spacing: 0.15em;
+        }
+
+        /* ── TRANSLATABLE ── (hidden until JS reveals) */
+        [data-jp][data-en] { transition: color 0.1s; }
+
+        @media (max-width: 720px) {
+            .logo { font-size: 2rem; }
+            .hero-grid { grid-template-columns: 1fr; }
+            .hud-panel { display: none; }
+            .hero-heading { font-size: 1.4rem; }
+            .cards-grid { grid-template-columns: 1fr; }
+            header { padding: 2rem 1.5rem; }
         }
     </style>
 </head>
 <body>
-    <!-- Matrix background -->
-    <canvas id="matrixCanvas"></canvas>
-    
-    <!-- Scanlines -->
-    <div class="scanlines"></div>
-    
-    <!-- Floating elements -->
-    <div class="floating-element floating-1 neon-text">龍</div>
-    <div class="floating-element floating-2 neon-text">夢</div>
-    
-    <header>
-        <h1 class="logo neon-text" data-japanese="トリスタンギプ" data-english="Tristan Gipp">トリスタンギプ</h1>
-        <p class="tagline neon-text" data-japanese="サイバーセキュリティ" data-english="Cybersecurity">サイバーセキュリティ</p>
-    </header>
-    
-    <nav>
-        <div class="nav-container">
-            <a href="#" class="nav-item" data-japanese="ホーム" data-english="Home" onclick="window.location.reload()">ホーム</a>
-            <a href="https://docs.google.com/document/d/e/2PACX-1vSZh0V1HGaWPhlx13AHG8jBq4I3PWDzqtxZD8Bwr_--ZUQ7WadhJ7ipg0nRH-3dTWatECo8ShzhhlyY/pub" class="nav-item" data-japanese="レ-スメ" data-english="Resume" target="_blank">サービス</a>
-            <a href="https://github.com/Mobzillaface?tab=repositories" class="nav-item" data-japanese="リポジトリ" data-english="Repositories" target="_blank">リポジトリ</a>
-            <a href="#" class="nav-item contact-button" data-japanese="お問い合わせ" data-english="Contact">お問い合わせ</a>
-        </div>
-    </nav>
-    
-    <main>
-        <section class="hero-section">
-            <h2 class="hero-title neon-text" data-japanese="未来への扉" data-english="Gateway to the Future">未来への扉</h2>
-            <p class="hero-subtitle neon-text" data-japanese="プロジェクト" data-english="Projects">プロジェクト</p>
-        </section>
-        
-        <div class="cards-container">
-            <div class="card neon-border">
-                <h3 class="neon-text" data-japanese="ケビンギャラリー" data-english="Kevin Gallery">ケビンギャラリー</h3>
-                <p><a href="https://kevinblunder.com" target="_blank">kevinblunder.com</a></p>
-                <p class="japanese-text" data-japanese="私の電話にあったケビンの写真を見てください" data-english="Browse all the photos of Kevin Roleke that I have in my phone">私の電話にあったケビンの写真を見てください</p>
-            </div>
-            
-            <div class="card neon-border">
-                <h3 class="neon-text" data-japanese="おじいちゃんギャラリー" data-english="Grandpa Gallery">おじいちゃんギャラリー</h3>
-                <p><a href="https://darryl-long.com" target="_blank">darryl-long.com</a></p>
-                <p class="japanese-text" data-japanese="写真を見るおじいちゃんギャラリー" data-english="Look at photos of my Grandpa">写真を見るおじいちゃんギャラリー</p>
-            </div>
-            
-            <div class="card neon-border">
-                <h3 class="neon-text" data-japanese="写真のアップロード" data-english="Photo Uploader">写真のアップロード</h3>
-                <p><a href="https://photo.tristangipp.com" target="_blank">photo.tristangipp.com</a></p>
-                <p class="japanese-text" data-japanese="私のウェブサイトに写真をアップロードする" data-english="Upload photos to my site, password is meandsometea">私のウェブサイトに写真をアップロードする</p>
-            </div>
-            
-            <div class="card neon-border">
-                <h3 class="neon-text" data-japanese="新しいプロジェクト" data-english="Black Hole Creator">新しいプロジェクト</h3>
-                <p><a href="https://bh.tristangipp.com" target="_blank">bh.tristangipp.com</a></p>
-                <p class="japanese-text" data-japanese="新しいウェブサイトプロジェクト" data-english="Make your own black hole using ray tracing">新しいウェブサイトプロジェクト</p>
-            </div>
-        </div>
-    </main>
-    
-    <!-- Contact Modal -->
-    <div class="contact-modal" id="contactModal">
-        <button class="close-button neon-text">×</button>
-        <h2 class="neon-text">Contact Information</h2>
-        <p>Email: gipptristan@gmail.com</p>
-        <p>Social: tristangipp_ on Instagram</p>
+
+<canvas id="matrixCanvas"></canvas>
+<div class="scanlines"></div>
+<div class="floating-jp float-1">龍</div>
+<div class="floating-jp float-2">夢</div>
+
+<!-- NAV -->
+<nav>
+    <div class="nav-inner">
+        <a href="https://docs.google.com/document/d/e/2PACX-1vSbcN5cbaDtqyufUrC360RzXpEJQSb9g0DPP2jxtRT-2uXVMa0Qe7qMUoTEZqe9Cg/pub"
+           class="nav-item" target="_blank"
+           data-jp="レジュメ" data-en="Résumé">レジュメ</a>
+        <a href="https://github.com/Mobzillaface?tab=repositories"
+           class="nav-item" target="_blank"
+           data-jp="リポジトリ" data-en="Repositories">リポジトリ</a>
+        <button class="nav-item contact-btn"
+                data-jp="お問い合わせ" data-en="Contact">お問い合わせ</button>
     </div>
-    
-    <script>
-        // New Matrix rain effect
-        const q = document.getElementById('matrixCanvas');
-        const s = window.screen;
-        const width = q.width = s.width;
-        const height = q.height = s.height;
-        const letters = Array(64).join(1).split('');
-        const characters = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン愛美心夢光闇龍神風雷火水土空時間世界未来過去現在道真理力生死命運星月太陽雲雨雪海森林都市街道橋門窓家人間男女子供老人友達家族恋人敵味方戦争平和希望絶望喜怒哀楽';
-        
-        function drawMatrix() {
-            q.getContext('2d').fillStyle = 'rgba(0,0,0,.05)';
-            q.getContext('2d').fillRect(0,0,width,height);
-            q.getContext('2d').fillStyle = '#00aeff';
-            q.getContext('2d').font = '21px monospace'; // Reduced font size by 25% (28px * 0.75 = 21px)
-            letters.map(function(y_pos, index){
-                text = characters[Math.floor(Math.random() * characters.length)];
-                x_pos = index * 40;
-                q.getContext('2d').fillText(text, x_pos, y_pos);
-                letters[index] = (y_pos > height + Math.random() * 1e4) ? 0 : y_pos + 20;
-            });
+</nav>
+
+<!-- HEADER -->
+<header>
+    <div class="header-eyebrow" data-jp="ポートフォリオ // サイバーセキュリティ" data-en="Portfolio // Cybersecurity">ポートフォリオ // サイバーセキュリティ</div>
+    <h1 class="logo"><span data-jp="トリスタン" data-en="Tristan">トリスタン</span> <span data-jp="ギプ" data-en="Gipp">ギプ</span></h1>
+    <p class="tagline" data-jp="サイバーセキュリティの学生 &amp; 開発者" data-en="Cybersecurity Student &amp; Developer">サイバーセキュリティの学生 &amp; 開発者</p>
+</header>
+
+<!-- MAIN -->
+<main>
+    <div class="site-wrapper">
+
+        <!-- INTRO -->
+        <section class="hero">
+            <div class="hero-grid">
+                <div>
+                    <h2 class="hero-heading">
+                        <span data-jp="ロチェスター工科大学の" data-en="Cybersecurity student">ロチェスター工科大学の</span><br>
+                        <em><span data-jp="サイバーセキュリティ学生" data-en="at RIT">サイバーセキュリティ学生</span></em>
+                    </h2>
+                    <p class="hero-body" data-jp="ロチェスター工科大学でサイバーセキュリティを学んでいます。ウェブアプリケーション攻撃の専門知識を持ち、最近 Hack The Box から CWES 認定を取得しました。セキュリティ、ツール開発、そしてシステムの仕組みに情熱を持っています。" data-en="I study cybersecurity at Rochester Institute of Technology, with a focus on offensive security and web application exploitation. I recently earned the Certified Web Exploitation Specialist (CWES) certification from Hack The Box — a hands-on credential covering the full spectrum of modern web attack techniques.">
+                        ロチェスター工科大学でサイバーセキュリティを学んでいます。ウェブアプリケーション攻撃の専門知識を持ち、最近 Hack The Box から CWES 認定を取得しました。セキュリティ、ツール開発、そしてシステムの仕組みに情熱を持っています。
+                    </p>
+                    <div class="cert-badge" data-jp="CWES 認定 — Hack The Box" data-en="CWES Certified — Hack The Box">CWES 認定 — Hack The Box</div>
+                </div>
+
+                <!-- HUD PANEL -->
+                <div class="hud-panel">
+                    <div class="hud-corner tl"></div>
+                    <div class="hud-corner tr"></div>
+                    <div class="hud-corner bl"></div>
+                    <div class="hud-corner br"></div>
+
+                    <div class="hud-stat">
+                        <span class="hud-stat-label" data-jp="専門" data-en="Specialization">専門</span>
+                        <span class="hud-stat-value" data-jp="ウェブアプリケーション攻撃" data-en="Web App Exploitation">ウェブアプリケーション攻撃</span>
+                        <div class="hud-bar"><div class="hud-bar-fill" style="width:88%"></div></div>
+                    </div>
+
+                    <hr class="hud-divider">
+
+                    <div class="hud-stat">
+                        <span class="hud-stat-label" data-jp="認定資格" data-en="Certification">認定資格</span>
+                        <span class="hud-stat-value" data-jp="CWES — ハック・ザ・ボックス" data-en="CWES — Hack The Box">CWES — ハック・ザ・ボックス</span>
+                        <div class="hud-bar"><div class="hud-bar-fill" style="width:100%"></div></div>
+                    </div>
+
+                    <hr class="hud-divider">
+
+                    <div class="hud-stat">
+                        <span class="hud-stat-label" data-jp="大学" data-en="University">大学</span>
+                        <span class="hud-stat-value" data-jp="ロチェスター工科大学" data-en="RIT">ロチェスター工科大学</span>
+                        <div class="hud-bar"><div class="hud-bar-fill" style="width:74%"></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECTS -->
+        <section class="section">
+            <div class="section-label" data-jp="プロジェクト" data-en="Projects">プロジェクト</div>
+            <div class="cards-grid">
+
+                <a class="card" href="https://darryl-long.com" target="_blank">
+                    <div class="card-title" data-jp="おじいちゃんギャラリー" data-en="Grandpa Gallery">おじいちゃんギャラリー</div>
+                    <p class="card-desc" data-jp="ダリル・ロングに捧げた写真ギャラリー — 個人的なアーカイブ。" data-en="A photo gallery dedicated to Darryl Long — an ongoing personal archive.">ダリル・ロングに捧げた写真ギャラリー — 個人的なアーカイブ。</p>
+                    <span class="card-link" data-jp="サイトを見る →" data-en="darryl-long.com →">サイトを見る →</span>
+                </a>
+
+                <a class="card" href="https://bh.tristangipp.com" target="_blank">
+                    <div class="card-title" data-jp="ブラックホール生成" data-en="Black Hole Creator">ブラックホール生成</div>
+                    <p class="card-desc" data-jp="レイトレーシングを使ったインタラクティブなブラックホールシミュレーター。" data-en="Interactive ray-traced black hole simulator — build your own singularity in the browser.">レイトレーシングを使ったインタラクティブなブラックホールシミュレーター。</p>
+                    <span class="card-link" data-jp="サイトを見る →" data-en="bh.tristangipp.com →">サイトを見る →</span>
+                </a>
+
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+    <p data-jp="© 2025 トリスタンギプ · サイバーセキュリティ" data-en="© 2025 TRISTAN GIPP · Cybersecurity">© 2025 トリスタンギプ · サイバーセキュリティ</p>
+</footer>
+
+<!-- CONTACT MODAL -->
+<div class="modal-overlay" id="contactModal">
+    <div class="modal">
+        <button class="modal-close" id="modalClose">×</button>
+        <h2 data-jp="連絡先" data-en="Contact">連絡先</h2>
+        <div class="modal-line">
+            <span class="modal-line-label" data-jp="メール" data-en="Email">メール</span>
+            <span class="modal-line-value">gipptristan@gmail.com</span>
+        </div>
+        <div class="modal-line">
+            <span class="modal-line-label" data-jp="インスタグラム" data-en="Instagram">インスタグラム</span>
+            <span class="modal-line-value">@tristangipp_</span>
+        </div>
+        <div class="modal-line">
+            <span class="modal-line-label" data-jp="ギットハブ" data-en="GitHub">ギットハブ</span>
+            <span class="modal-line-value">Mobzillaface</span>
+        </div>
+    </div>
+</div>
+
+<script>
+// ── MATRIX RAIN ──
+(function () {
+    const c = document.getElementById('matrixCanvas');
+    const ctx = c.getContext('2d');
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
+    const jp = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホ愛美心夢光闇龍神風雷';
+    const cols = Math.floor(c.width / 28);
+    const drops = Array.from({ length: cols }, () => Math.random() * -100);
+    function draw() {
+        ctx.fillStyle = 'rgba(10,10,20,0.06)';
+        ctx.fillRect(0, 0, c.width, c.height);
+        ctx.fillStyle = '#00b4ff';
+        ctx.font = '16px monospace';
+        drops.forEach((y, i) => {
+            ctx.fillText(jp[Math.floor(Math.random() * jp.length)], i * 28, y);
+            drops[i] = (y > c.height + Math.random() * 8000) ? 0 : y + 18;
+        });
+    }
+    setInterval(draw, 40);
+    window.addEventListener('resize', () => { c.width = window.innerWidth; c.height = window.innerHeight; });
+})();
+
+// ── TRANSLATION FLICKER ──
+const JP_CHARS = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホ愛美心夢光闇龍神風雷火水土空時間未来';
+
+function flickerTranslate(el, fast) {
+    const from = el.dataset.jp;
+    const to   = el.dataset.en;
+    if (!from || !to) return;
+
+    const maxLen = Math.max(from.length, to.length);
+    let revealed = 0;
+    let ticks = 0;
+    const TICKS_PER_CHAR = fast ? 1 : 2;
+    const TICK_MS = fast ? 8 : 16;
+
+    function tick() {
+        if (revealed >= maxLen) {
+            el.innerHTML = to;
+            return;
         }
-        
-        setInterval(drawMatrix, 33);
-        
-        // Translation effect with faster flicker
-        let translatedElements = new Set();
-        
-        function createTranslationEffect(element) {
-            if (translatedElements.has(element)) return;
-            
-            const originalText = element.dataset.japanese;
-            const targetText = element.dataset.english;
-            const characters = 'あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン愛美心夢光闇龍神風雷火水土空時間世界未来過去現在道真理力生死命運星月太陽雲雨雪海森林都市街道橋門窓家人間男女子供老人友達家族恋人敵味方戦争平和希望絶望喜怒哀楽';
-            
-            const maxLength = Math.max(originalText.length, targetText.length);
-            let currentIndex = 0;
-            let flickerCount = 0;
-            const maxFlickersPerChar = 2;
-            const totalFlickers = maxLength * maxFlickersPerChar;
-            
-            function flicker() {
-                if (flickerCount >= totalFlickers) {
-                    element.textContent = targetText;
-                    element.classList.add('translated');
-                    element.classList.remove('japanese-hover');
-                    translatedElements.add(element);
-                    return;
-                }
-                
-                let displayText = '';
-                for (let i = 0; i < maxLength; i++) {
-                    if (i < currentIndex) {
-                        displayText += targetText[i] || '';
-                    } else {
-                        displayText += characters[Math.floor(Math.random() * characters.length)];
-                    }
-                }
-                
-                element.textContent = displayText;
-                flickerCount++;
-                
-                if (flickerCount % maxFlickersPerChar === 0) {
-                    currentIndex++;
-                }
-                
-                setTimeout(flicker, 25);
+        let display = '';
+        for (let i = 0; i < maxLen; i++) {
+            if (i < revealed) {
+                display += to[i] || '';
+            } else {
+                display += JP_CHARS[Math.floor(Math.random() * JP_CHARS.length)];
             }
-            
-            flicker();
         }
-        
-        // Auto-translate all elements after 2 seconds
-        function autoTranslateAll() {
-            const elementsToTranslate = document.querySelectorAll('[data-japanese][data-english]');
-            elementsToTranslate.forEach((element, index) => {
-                setTimeout(() => {
-                    if (!translatedElements.has(element)) {
-                        element.classList.add('japanese-hover');
-                        createTranslationEffect(element);
-                    }
-                }, index * 100);
-            });
-        }
-        
-        setTimeout(autoTranslateAll, 2000);
-        
-        // Glitch effect on click
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('nav-item')) {
-                e.target.style.animation = 'glitch 0.3s ease';
-                setTimeout(() => {
-                    e.target.style.animation = '';
-                }, 300);
-            }
-        });
-        
-        // Contact modal functionality
-        const contactButton = document.querySelector('.contact-button');
-        const contactModal = document.getElementById('contactModal');
-        const closeButton = document.querySelector('.close-button');
-        
-        contactButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            contactModal.classList.add('show');
-        });
-        
-        closeButton.addEventListener('click', () => {
-            contactModal.classList.remove('show');
-        });
-        
-        window.addEventListener('click', (e) => {
-            if (e.target === contactModal) {
-                contactModal.classList.remove('show');
-            }
-        });
-        
-        // Random color shifts for neon elements
-        function randomColorShift() {
-            const neonElements = document.querySelectorAll('.neon-text');
-            const colors = ['#d44dc9', '#b8001f', '#6b2c91'];
-            
-            neonElements.forEach(element => {
-                if (Math.random() < 0.1 && !translatedElements.has(element)) {
-                    const randomColor = colors[Math.floor(Math.random() * colors.length)];
-                    element.style.color = randomColor;
-                    setTimeout(() => {
-                        element.style.color = '';
-                    }, 200);
-                }
-            });
-        }
-        
-        setInterval(randomColorShift, 2000);
-    </script>
+        el.innerHTML = display;
+        ticks++;
+        if (ticks % TICKS_PER_CHAR === 0) revealed++;
+        setTimeout(tick, TICK_MS);
+    }
+    tick();
+}
+
+// Run on all [data-jp][data-en] elements with staggered delay, after a 1s initial pause
+window.addEventListener('DOMContentLoaded', () => {
+    const els = Array.from(document.querySelectorAll('[data-jp][data-en]'));
+    els.forEach((el, i) => {
+        const isFast = el.classList.contains('hero-body');
+        setTimeout(() => flickerTranslate(el, isFast), 1000 + i * 60);
+    });
+});
+
+// ── CONTACT MODAL ──
+const overlay    = document.getElementById('contactModal');
+const closeBtn   = document.getElementById('modalClose');
+const contactBtn = document.querySelector('.contact-btn');
+contactBtn.addEventListener('click', () => overlay.classList.add('show'));
+closeBtn.addEventListener('click',   () => overlay.classList.remove('show'));
+overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('show'); });
+</script>
 </body>
 </html>
-
